@@ -1,0 +1,19 @@
+export LOG_FILE="/var/log/pdns-updater.log"
+
+export BROKER_URI="amqp://USERNAME:PASSWORD@hase.example.com:5672/"
+
+export OS_IDENTITY_API_VERSION=3
+export OS_AUTH_URL="https://api.example.com:5000/v3"
+export OS_USERNAME="user"
+export OS_PASSWORD="pass"
+export OS_PROJECT_NAME="prj"
+export OS_USER_DOMAIN_NAME="Default"
+export OS_PROJECT_DOMAIN_NAME="Default"
+export OS_INTERFACE="public"
+
+export INTERNAL_DOMAIN="internal.example.com"
+export EXTERNAL_DOMAIN="external.example.com"
+
+export PDNS_API="http://dns.example.com:8150/api/v1"
+export PDNS_KEY="APIKEY"
+export TTL=60
