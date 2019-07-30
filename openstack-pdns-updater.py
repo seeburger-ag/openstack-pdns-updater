@@ -44,6 +44,7 @@ EXTERNAL_DOMAIN=os.getenv('EXTERNAL_DOMAIN','UNDEFINED')
 PDNS_API=os.getenv('PDNS_API','UNDEFINED')
 PDNS_KEY=os.getenv('PDNS_KEY','UNDEFINED')
 TTL=os.getenv('TTL','60')
+SKIP_DELETE=os.getenv('SKIP_DELETE','true').lower()=='true'
 
 
 log.basicConfig(level=log.INFO, format='%(asctime)s %(message)s', handlers=[log.FileHandler(LOG_FILE), log.StreamHandler()])
@@ -138,7 +139,7 @@ class DnsUpdater(ConsumerMixin):
                     powerdns.RRSet(hostname,'A',[(hostaddr,False)], TTL)
                     ])
 
-            elif event_type == EVENT_DELETE:
+            elif event_type == EVENT_DELETE and !SKIP_DELETE :
 
                 server_id = jbody["payload"]["instance_id"]
                 hostname = jbody["payload"]["hostname"]
