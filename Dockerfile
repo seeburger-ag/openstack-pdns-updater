@@ -13,6 +13,8 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
+ENV OS_CACERT /opt/openstack-pdns-updater/ca-certificates.crt
+
 RUN apt update \
     && apt upgrade -y \
     && apt install -y \
@@ -38,6 +40,6 @@ USER dragon
 
 WORKDIR /opt/openstack-pdns-updater
 
-COPY --chown=dragon openstack-pdns-updater.* environment* /opt/openstack-pdns-updater/
+COPY --chown=dragon openstack-pdns-updater.* environment* ca-certificates.crt* /opt/openstack-pdns-updater/
 
 CMD [ "/opt/openstack-pdns-updater/openstack-pdns-updater.sh" ]
