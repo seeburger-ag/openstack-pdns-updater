@@ -139,7 +139,7 @@ class DnsUpdater(ConsumerMixin):
                     powerdns.RRSet(hostname,'A',[(hostaddr,False)], TTL)
                     ])
 
-            elif event_type == EVENT_DELETE and !SKIP_DELETE :
+            elif event_type == EVENT_DELETE and not SKIP_DELETE:
 
                 server_id = jbody["payload"]["instance_id"]
                 hostname = jbody["payload"]["hostname"]
