@@ -33,6 +33,7 @@ OS_PROJECT_NAME=os.getenv('OS_PROJECT_NAME','UNDEFINED')
 OS_USER_DOMAIN_NAME=os.getenv('OS_USER_DOMAIN_NAME','Default')
 OS_PROJECT_DOMAIN_NAME=os.getenv('OS_PROJECT_DOMAIN_NAME','Default')
 OS_INTERFACE=os.getenv('OS_INTERFACE','public')
+OS_CACERT=os.getenv('OS_CACERT', '/opt/openstack-pdns-updater/ca-certificates.crt')
 
 EVENT_CREATE=os.getenv('EVENT_CREATE','compute.instance.create.end')
 EVENT_DELETE=os.getenv('EVENT_DELETE','compute.instance.delete.start')
@@ -44,7 +45,7 @@ EXTERNAL_DOMAIN=os.getenv('EXTERNAL_DOMAIN','UNDEFINED')
 PDNS_API=os.getenv('PDNS_API','UNDEFINED')
 PDNS_KEY=os.getenv('PDNS_KEY','UNDEFINED')
 TTL=os.getenv('TTL','60')
-SKIP_DELETE=os.getenv('SKIP_DELETE','true').lower()=='true'
+SKIP_DELETE=os.getenv('SKIP_DELETE','false').lower() in ("true", "yes", "1")
 
 
 log.basicConfig(level=log.INFO, format='%(asctime)s %(message)s', handlers=[log.FileHandler(LOG_FILE), log.StreamHandler()])
@@ -59,7 +60,7 @@ class DnsUpdater(ConsumerMixin):
                            project_name=OS_PROJECT_NAME,
                            user_domain_name=OS_USER_DOMAIN_NAME,
                            project_domain_name=OS_PROJECT_DOMAIN_NAME)
-        s = session.Session(auth=auth)
+        s = session.Session(auth=auth, verify=OS_CACERT)
         log.info("Session {}".format(s))
         self.nova = client.Client(session=s, version=2)
         return
@@ -139,8 +140,10 @@ class DnsUpdater(ConsumerMixin):
                     powerdns.RRSet(hostname,'A',[(hostaddr,False)], TTL)
                     ])
 
+            elif event_type == EVENT_DELETE and SKIP_DELETE:
+                log.info("Delete request received, but SKIP_DELETE is set to {}, so skipping".format(SKIP_DELETE))
+                
             elif event_type == EVENT_DELETE and not SKIP_DELETE:
-
                 server_id = jbody["payload"]["instance_id"]
                 hostname = jbody["payload"]["hostname"]
                 hostaddr = ""

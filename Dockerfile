@@ -14,6 +14,7 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
 ENV OS_CACERT /opt/openstack-pdns-updater/ca-certificates.crt
+ENV SKIP_DELETE False
 
 RUN apt update \
     && apt upgrade -y \
