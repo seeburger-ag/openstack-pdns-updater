@@ -185,7 +185,7 @@ class DnsUpdater(ConsumerMixin):
 
 if __name__ == "__main__":
     log.info("Connecting to broker {}".format(BROKER_URI))
-    with BrokerConnection(BROKER_URI) as connection:
+    with BrokerConnection(BROKER_URI, heartbeat=4) as connection:
         DnsUpdater(connection).run()
 
 # vim: expandtab sw=4 ts=4
