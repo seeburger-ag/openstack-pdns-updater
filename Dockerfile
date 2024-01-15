@@ -17,7 +17,7 @@ ENV OS_CACERT /opt/openstack-pdns-updater/ca-certificates.crt
 ENV SKIP_DELETE False
 
 RUN apt update \
-    && apt upgrade -y \
+    && apt dist-upgrade -y \
     && apt install -y \
         git \
         locales \
