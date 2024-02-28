@@ -1,4 +1,4 @@
-ARG UBUNTU_RELEASE=18.04
+ARG UBUNTU_RELEASE=22.04
 FROM ubuntu:${UBUNTU_RELEASE}
 LABEL maintainer="SEEBURGER AG (https://github.com/seeburger-ag/openstack-pdns-updater)"
 
