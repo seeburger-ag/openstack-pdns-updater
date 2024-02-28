@@ -12,7 +12,7 @@ import powerdns
 
 from kombu import BrokerConnection, Exchange, Queue
 from kombu.mixins import ConsumerMixin
-from keystoneauth1 import loading, session
+from keystoneauth1 import session
 from keystoneauth1.identity import v3
 from novaclient import client
 
