@@ -134,8 +134,8 @@ class DnsUpdater(ConsumerMixin):
 
                 # Delete old A records, which may have existed and create a new one in the
                 # Zone of the internal and externat domain
-                internal_zone.delete_record([powerdns.RRSet(hostname,'A',[])])
-                external_zone.delete_record([powerdns.RRSet(hostname,'A',[])])
+                internal_zone.delete_records([powerdns.RRSet(hostname,'A',[])])
+                external_zone.delete_records([powerdns.RRSet(hostname,'A',[])])
                 internal_zone.create_records([
                     powerdns.RRSet(hostname,'A',[(hostaddr,False)], TTL)
                     ])
@@ -150,8 +150,8 @@ class DnsUpdater(ConsumerMixin):
                 log.info("Deleting {}.{}[.internal].seeburger.de".format(hostname, project))
 
                 # As the instance vanished, delete all remaining know A records.
-                internal_zone.delete_record([powerdns.RRSet(hostname,'A',[])])
-                external_zone.delete_record([powerdns.RRSet(hostname,'A',[])])
+                internal_zone.delete_records([powerdns.RRSet(hostname,'A',[])])
+                external_zone.delete_records([powerdns.RRSet(hostname,'A',[])])
 
             elif event_type == EVENT_IP_UPDATE:
                 hostaddr = jbody["payload"]["floatingip"]["floating_ip_address"]
