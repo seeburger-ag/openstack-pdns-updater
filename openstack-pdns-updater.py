@@ -14,6 +14,7 @@ from kombu import BrokerConnection, Exchange, Queue
 from kombu.mixins import ConsumerMixin
 from keystoneclient.auth.identity import v3
 from keystoneclient import session
+from keystoneclient.v3 import client as keystone_client
 from novaclient import client
 
 
@@ -63,6 +64,7 @@ class DnsUpdater(ConsumerMixin):
         s = session.Session(auth=auth, verify=OS_CACERT)
         log.info("Session {}".format(s))
         self.nova = client.Client(session=s, version=2)
+        self.keystone_client = keystone_client.Client(session=s)
         return
 
     def get_server_for_ip(self, ip, project_id):
@@ -95,8 +97,11 @@ class DnsUpdater(ConsumerMixin):
         jbody = json.loads(body["oslo.message"])
         event_type = jbody["event_type"]
         log.info("Event type: {}".format(event_type))
-        project = jbody["_context_project_name"]
+        ##project = jbody["_context_project_name"]
         project_id = jbody["_context_project_id"]
+        
+        project = self.keystone_client.projects.get(project_id).name
+        
         hostaddr_internal = ""
 
         if event_type in [ EVENT_CREATE, EVENT_DELETE, EVENT_IP_UPDATE ]:
