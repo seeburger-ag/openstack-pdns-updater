@@ -29,7 +29,7 @@ RUN apt update \
     && locale-gen en_US.UTF-8 \
     && pip3 install --no-cache-dir os-client-config \
     && pip3 install --no-cache-dir python-powerdns \
-    && pip3 install --no-cache-dir kombu \
+    && pip3 install --no-cache-dir kombu==5.3.5 \
     && pip3 install --no-cache-dir keystone \
     && pip3 install --no-cache-dir python-novaclient \
     && mkdir -p /opt/openstack-pdns-updater \
