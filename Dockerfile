@@ -1,41 +1,33 @@
-ARG UBUNTU_RELEASE=22.04
+ARG UBUNTU_RELEASE=24.04
 FROM ubuntu:${UBUNTU_RELEASE}
 LABEL maintainer="SEEBURGER AG (https://github.com/seeburger-ag/openstack-pdns-updater)"
 
 USER root
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
-ENV USER_ID ${USER_ID:-45000}
-ENV GROUP_ID ${GROUP_ID:-45000}
+ARG USER_ID=45000
+ARG GROUP_ID=45000
+ENV USER_ID=${USER_ID}
+ENV GROUP_ID=${GROUP_ID}
 
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
 
-ENV OS_CACERT /opt/openstack-pdns-updater/ca-certificates.crt
-ENV SKIP_DELETE False
+ENV OS_CACERT=/opt/openstack-pdns-updater/ca-certificates.crt
+ENV SKIP_DELETE=False
 
-RUN apt update \
-    && apt dist-upgrade -y \
-    && apt install -y \
-        git \
-        locales \
-        software-properties-common \
-        python3-pip \
-        libssl-dev \
-    && groupadd -g $GROUP_ID dragon \
+RUN apt update && apt dist-upgrade -y --autoremove --purge
+RUN apt install -y git locales software-properties-common python3-pip libssl-dev python3-os-client-config python3-keystone python3-novaclient python3-kombu
+RUN apt clean
+RUN groupadd -g $GROUP_ID dragon \
     && useradd -g dragon -u $USER_ID -m -d /home/dragon dragon \
-    && locale-gen en_US.UTF-8 \
-    && pip3 install --no-cache-dir os-client-config \
-    && pip3 install --no-cache-dir python-powerdns \
-    && pip3 install --no-cache-dir kombu==5.3.5 \
-    && pip3 install --no-cache-dir keystone \
-    && pip3 install --no-cache-dir python-novaclient \
-    && mkdir -p /opt/openstack-pdns-updater \
+    && locale-gen en_US.UTF-8
+RUN mkdir -p /opt/openstack-pdns-updater \
     && chown -R dragon: /opt/openstack-pdns-updater \
-    && apt autoremove -y && apt clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN pip3 install python-powerdns --no-cache-dir --break-system-packages
 
 USER dragon
 
